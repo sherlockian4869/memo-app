@@ -1,8 +1,16 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+//App.tsx
+import React from 'react';
+import { RecoilRoot } from 'recoil';
+import { TodoContainer } from './todo/todoContainer';
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+function App() {
+  return (
+    <div className='App'>
+      <RecoilRoot>
+        <TodoContainer />
+      </RecoilRoot>
+    </div>
+  );
 }
 
-export default MyApp
+export default App;
