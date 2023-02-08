@@ -1,3 +1,4 @@
+import { Timestamp } from 'firebase/firestore';
 import { atom } from 'recoil';
 import { Memo } from '../common/memo.type';
 import { AtomKeys } from '../common/recoilKeys';
@@ -7,13 +8,17 @@ export const memoListState = atom<Memo[]>({
   default: [
     {
       id: 1,
-      title: 'テスト1',
-      content: 'テスト1の内容',
+      url: 'URL',
+      title: 'テストタイトル1',
+      content: 'テストコンテンツ1',
+      createdAt: Timestamp.now(),
     },
     {
       id: 2,
-      title: 'テスト2',
-      content: 'テスト2の内容',
+      url: 'URL',
+      title: 'テストタイトル2',
+      content: 'テストコンテンツ2',
+      createdAt: Timestamp.now(),
     },
   ],
 });
