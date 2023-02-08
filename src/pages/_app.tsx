@@ -1,12 +1,15 @@
 import type { AppProps } from 'next/app';
 import React from 'react';
 import { RecoilRoot } from 'recoil';
+import { AuthProvider } from '../firebase/apis/auth';
 
 function App({ Component, pageProps }: AppProps) {
   return (
-    <RecoilRoot>
-      <Component {...pageProps} />
-    </RecoilRoot>
+    <AuthProvider>
+      <RecoilRoot>
+        <Component {...pageProps} />
+      </RecoilRoot>
+    </AuthProvider>
   );
 }
 
