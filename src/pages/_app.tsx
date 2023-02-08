@@ -1,15 +1,12 @@
-//App.tsx
+import type { AppProps } from 'next/app';
 import React from 'react';
 import { RecoilRoot } from 'recoil';
-import { TodoContainer } from './todo/todoContainer';
 
-function App() {
+function App({ Component, pageProps }: AppProps) {
   return (
-    <div className='App'>
-      <RecoilRoot>
-        <TodoContainer />
-      </RecoilRoot>
-    </div>
+    <RecoilRoot>
+      <Component {...pageProps} />
+    </RecoilRoot>
   );
 }
 

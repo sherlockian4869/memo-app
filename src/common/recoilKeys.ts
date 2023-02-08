@@ -1,9 +1,5 @@
 //recoilKeys.ts
 export const AtomKeys = {
-  TODOS_STATE: 'todosState',
-};
-
-//recoilKeys.ts
-export const SelectorKeys = {
-  TODO_MAXID: 'todoMaxId',
+  MEMO_STATE: 'memoState',
+  MEMOS_STATE: 'memoListState',
 };

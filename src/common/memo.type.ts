@@ -1,6 +1,5 @@
-export type Todo = {
+export type Memo = {
   id: number;
   title: string;
   content: string;
-  isCompleted: boolean;
 };
