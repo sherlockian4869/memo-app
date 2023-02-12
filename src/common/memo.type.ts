@@ -1,9 +1,8 @@
 import { Timestamp } from 'firebase/firestore';
 
 export type Memo = {
-  id: number;
   url: string;
+  type: string;
   title: string;
   content: string;
-  createdAt: Timestamp;
 };
