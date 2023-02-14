@@ -5,7 +5,7 @@ export default function LoginPage() {
   return (
     <Box display='grid' justifyContent='center'>
       <Flex h='10vw' justify='center' align='center'>
-        <Heading>Legal Paper</Heading>
+        <Heading>My Memo Blog</Heading>
       </Flex>
       <Flex
         h='50vh'

@@ -1,7 +1,16 @@
-import { Box, FormControl, FormLabel, Input, Button } from '@chakra-ui/react';
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  Flex,
+  Spacer,
+  VStack,
+  Textarea,
+} from '@chakra-ui/react';
 import type { NextPage } from 'next';
 import Router from 'next/router';
-import { title } from 'process';
 import { useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 import Layout from '~/src/components/Layout';
@@ -14,6 +23,8 @@ const PostView: NextPage = () => {
   const { register, handleSubmit } = useForm<Memo>({
     defaultValues: {
       title: input.title,
+      url: input.url,
+      type: input.type,
       content: input.content,
     },
   });
@@ -32,28 +43,71 @@ const PostView: NextPage = () => {
   });
   return (
     <Layout>
-      <Box margin='10px'>
+      <Box paddingY='10px' paddingX='100px'>
+        <div>
+          <Flex py='4' justifyContent='space-between' alignItems='center'>
+            <Button
+              onClick={() => window.history.back()}
+              colorScheme='green'
+              variant='solid'
+            >
+              トップへ
+            </Button>
+          </Flex>
+        </div>
         <form onSubmit={onSubmit}>
           <div>
-            <FormControl>
-              <FormLabel>title</FormLabel>
-              <Input type='text' {...register('title')} />
-            </FormControl>
-            <FormControl>
-              <FormLabel>type</FormLabel>
-              <Input type='text' {...register('type')} />
-            </FormControl>
-            <FormControl>
-              <FormLabel>url</FormLabel>
-              <Input type='text' {...register('url')} />
-            </FormControl>
-            <FormControl>
-              <FormLabel>content</FormLabel>
-              <Input type='text' {...register('content')} />
-            </FormControl>
+            <VStack gap={5}>
+              <FormControl>
+                <FormLabel fontSize='xs'>タイトル</FormLabel>
+                <Input
+                  type='text'
+                  variant='flushed'
+                  placeholder='title'
+                  fontFamily='mono'
+                  {...register('title')}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel fontSize='xs'>種別</FormLabel>
+                <Input
+                  type='text'
+                  variant='flushed'
+                  placeholder='type'
+                  fontFamily='mono'
+                  {...register('type')}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel fontSize='xs'>url</FormLabel>
+                <Input
+                  type='text'
+                  variant='flushed'
+                  placeholder='url'
+                  fontFamily='mono'
+                  {...register('url')}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel fontSize='xs'>内容</FormLabel>
+                <Textarea
+                  placeholder='content'
+                  height='xs'
+                  size='md'
+                  resize='none'
+                  fontFamily='mono'
+                  {...register('content')}
+                />
+              </FormControl>
+            </VStack>
           </div>
           <div>
-            <Button type='submit'>confirm</Button>
+            <Flex py='4' justifyContent='space-between' alignItems='center'>
+              <Spacer />
+              <Button type='submit' colorScheme='linkedin'>
+                確認画面へ
+              </Button>
+            </Flex>
           </div>
         </form>
       </Box>

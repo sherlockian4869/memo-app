@@ -1,0 +1,19 @@
+.full {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+}
+
+.container {
+    position: relative;
+    padding-bottom: 60px;
+    box-sizing: border-box;
+    min-height: 100vh;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+
+    /* 背景色などは割愛します */
+}
