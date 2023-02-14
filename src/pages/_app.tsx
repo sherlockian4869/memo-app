@@ -1,15 +1,15 @@
 import type { AppProps } from 'next/app';
+import { ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
 import { RecoilRoot } from 'recoil';
-import { AuthProvider } from '../firebase/apis/auth';
 
 function App({ Component, pageProps }: AppProps) {
   return (
-    <AuthProvider>
-      <RecoilRoot>
+    <RecoilRoot>
+      <ChakraProvider>
         <Component {...pageProps} />
-      </RecoilRoot>
-    </AuthProvider>
+      </ChakraProvider>
+    </RecoilRoot>
   );
 }
 
