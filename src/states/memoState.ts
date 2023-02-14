@@ -5,8 +5,9 @@ import { AtomKeys } from '../common/recoilKeys';
 export const memoState = atom<Memo>({
   key: AtomKeys.MEMO_STATE,
   default: {
-    id: 1,
-    title: 'テスト1',
-    content: 'テスト1の内容',
+    url: 'URL',
+    type: 'type',
+    title: 'テストタイトル',
+    content: 'テストコンテンツ',
   },
 });
