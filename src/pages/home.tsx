@@ -13,13 +13,15 @@ import {
 } from '@chakra-ui/react';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { Data } from '../common/data.type';
 import ContentsCard from '../components/ContentsCard';
 import Layout from '../components/Layout';
-import { getType } from '../firebase/apis/memo';
+import { types } from '../const/types';
+import { getMemoListSnapshot } from '../firebase/apis/memo';
+import { dataState } from '../states/dataState';
 
-const types = ['Salesforce', 'Next', 'Nuxt', 'Git', 'Components'];
-const contents = ['Salesforce', 'Next', 'Nuxt', 'Git', 'Components'];
 const info = [
   {
     types: 'Salesforce',
@@ -53,15 +55,23 @@ const info = [
 
 const HomeView: NextPage = () => {
   const router = useRouter();
-  // const [type, setType] = useState([]);
-
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     const data = await getType();
-  //     setType(data);
-  //   };
-  //   getData();
-  // }, []);
+  const [data, setData] = useRecoilState(dataState);
+  useEffect(() => {
+    const dataList: Data[] = [];
+    getMemoListSnapshot().then((e) => {
+      e.forEach((doc) =>
+        dataList.push({
+          id: doc.id,
+          url: doc.data().url,
+          type: doc.data().type,
+          title: doc.data().title,
+          content: doc.data().content,
+          createdAt: doc.data().createdAt,
+        })
+      );
+      setData(dataList);
+    });
+  }, []);
   return (
     <>
       <Layout>
@@ -79,9 +89,6 @@ const HomeView: NextPage = () => {
           </Container>
           <Tabs variant='enclosed'>
             <TabList>
-              {/* {type.map((result) => (
-                <Tab>{result}</Tab>
-              ))} */}
               {types.map((result) => (
                 <Tab>{result}</Tab>
               ))}
@@ -89,11 +96,11 @@ const HomeView: NextPage = () => {
             <TabPanels>
               {types.map((type) => (
                 <TabPanel>
-                  {info
-                    .filter((data) => data.types === type)
+                  {data
+                    .filter((data) => data.type === type)
                     .map((info) => (
                       <Stack spacing={4} direction='column'>
-                        <ContentsCard title={info.types} content='テスト' />
+                        <ContentsCard title={info.title} content='テスト' />
                       </Stack>
                     ))}
                 </TabPanel>

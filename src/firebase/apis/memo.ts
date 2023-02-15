@@ -7,12 +7,10 @@ import {
 } from 'firebase/firestore';
 import { useRecoilValue } from 'recoil';
 import { userState } from '~/src/states/userState';
-import { db } from '../firebase';
+import { auth, db } from '../firebase';
 
 /** ユーザマスタPath */
 const userMaster = 'version/1/users';
-/** メモマスタPath */
-const memoMaster = 'version/1/types';
 
 /**
  * メモ登録
@@ -41,16 +39,13 @@ export const registMemo = async (
 };
 
 /**
- * タイプの取得
- * @returns snapshot 種別
+ * 全てのメモを取得
+ * @returns メモデータ
  */
-export const getType = async () => {
-  const colRef = collection(db, memoMaster);
-  let results = [];
-  await getDocs(colRef).then((snapshot) => {
-    snapshot.docs.forEach((doc) => {
-      results.push(doc.data().typeName);
-    });
-  });
-  return results;
+export const getMemoListSnapshot = async () => {
+  const user = auth.currentUser;
+  const colRef = collection(db, userMaster, user.uid, 'memos');
+
+  const snapshot = await getDocs(colRef);
+  return snapshot;
 };
