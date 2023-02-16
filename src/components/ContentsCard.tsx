@@ -1,20 +1,19 @@
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  Heading,
-  Image,
-  Stack,
-  Text,
-} from '@chakra-ui/react';
+import { Card, CardBody, Heading, Image, Stack, Text } from '@chakra-ui/react';
+import router from 'next/router';
 
 interface Props {
+  id: string;
   title: string;
   content: string;
 }
 
-const ContentsCard = ({ title, content }: Props) => {
+const ContentsCard = ({ id, title, content }: Props) => {
+  const transition_detail = (path: string) => {
+    router.push({
+      pathname: path,
+      query: id,
+    });
+  };
   return (
     <Card
       direction={{ base: 'column', sm: 'row' }}
@@ -23,6 +22,7 @@ const ContentsCard = ({ title, content }: Props) => {
       marginY='5px'
       marginX='30px'
       padding='15px'
+      onClick={() => transition_detail('/memo/detail')}
     >
       <Image
         objectFit='cover'
