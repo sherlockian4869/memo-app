@@ -11,6 +11,7 @@ import {
   Tabs,
   Grid,
   GridItem,
+  Spinner,
 } from '@chakra-ui/react';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
@@ -49,52 +50,64 @@ const HomeView: NextPage = () => {
   }, []);
   return (
     <>
-      <Layout>
-        <Box margin='10px'>
-          <Container maxW='container.2xl'>
-            <Flex justifyContent='space-between' alignItems='center'>
-              <Spacer />
-              <Button
-                margin='10px'
-                onClick={() => router.push('/memo/post/post')}
-              >
-                新規作成
-              </Button>
-            </Flex>
-          </Container>
-          <Tabs variant='enclosed'>
-            <TabList>
-              {types.map((result) => (
-                <Tab>{result}</Tab>
-              ))}
-            </TabList>
-            <TabPanels>
-              {types.map((type) => (
-                <TabPanel>
-                  {data
-                    .filter((data) => data.type === type)
-                    .map((info) => (
-                      // <HStack>
-                      //   <VStack spacing={4} direction='column'>
-                      //     <ContentsCard title={info.title} content='テスト' />
-                      //   </VStack>
-                      // </HStack>
-                      <Grid templateColumns='repeat(2, 1fr)' gap={6}>
-                        <GridItem>
-                          <ContentsCard
-                            id={info.id}
-                            title={info.title}
-                            content={info.content}
-                          />
-                        </GridItem>
-                      </Grid>
-                    ))}
-                </TabPanel>
-              ))}
-            </TabPanels>
-          </Tabs>
+      {data.length == 0 ? (
+        <Box
+          h='90vh'
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+        >
+          <Spinner size='xl' />
         </Box>
-      </Layout>
+      ) : (
+        <Layout>
+          <Box margin='10px'>
+            <Container maxW='container.2xl'>
+              <Flex justifyContent='space-between' alignItems='center'>
+                <Spacer />
+                <Button
+                  margin='10px'
+                  onClick={() => router.push('/memo/post/post')}
+                >
+                  新規作成
+                </Button>
+              </Flex>
+            </Container>
+            <Tabs variant='enclosed'>
+              <TabList>
+                {types.map((result) => (
+                  <Tab>{result}</Tab>
+                ))}
+              </TabList>
+              <TabPanels>
+                {types.map((type) => (
+                  <TabPanel>
+                    {data
+                      .filter((data) => data.type === type)
+                      .map((info) => (
+                        // <HStack>
+                        //   <VStack spacing={4} direction='column'>
+                        //     <ContentsCard title={info.title} content='テスト' />
+                        //   </VStack>
+                        // </HStack>
+                        <Grid templateColumns='repeat(2, 1fr)' gap={6}>
+                          <GridItem>
+                            <ContentsCard
+                              id={info.id}
+                              title={info.title}
+                              content={info.content}
+                            />
+                          </GridItem>
+                        </Grid>
+                      ))}
+                  </TabPanel>
+                ))}
+              </TabPanels>
+            </Tabs>
+          </Box>
+        </Layout>
+      )}
+      ;
     </>
   );
 };
