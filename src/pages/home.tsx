@@ -81,7 +81,11 @@ const HomeView: NextPage = () => {
                       // </HStack>
                       <Grid templateColumns='repeat(2, 1fr)' gap={6}>
                         <GridItem>
-                          <ContentsCard title={info.title} content='テスト' />
+                          <ContentsCard
+                            id={info.id}
+                            title={info.title}
+                            content={info.content}
+                          />
                         </GridItem>
                       </Grid>
                     ))}
