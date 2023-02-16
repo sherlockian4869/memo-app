@@ -22,26 +22,20 @@ const ContentsCard = ({ title, content }: Props) => {
       variant='outline'
       marginY='5px'
       marginX='30px'
+      padding='15px'
     >
       <Image
         objectFit='cover'
-        maxW={{ base: '100%', sm: '200px' }}
-        src='~/public/favicon.ico'
-        alt='Caffe Latte'
+        maxW={{ base: '100%', sm: '150px' }}
+        src='/favicon.ico'
       />
 
       <Stack>
-        <CardBody>
+        <CardBody paddingX='5vw'>
           <Heading size='md'>{title}</Heading>
 
           <Text py='2'>{content}</Text>
         </CardBody>
-
-        <CardFooter>
-          <Button variant='solid' colorScheme='blue'>
-            Buy Latte
-          </Button>
-        </CardFooter>
       </Stack>
     </Card>
   );

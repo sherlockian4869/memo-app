@@ -25,6 +25,7 @@ const PostView: NextPage = () => {
       title: input.title,
       url: input.url,
       type: input.type,
+      important: input.important,
       content: input.content,
     },
   });
@@ -36,6 +37,7 @@ const PostView: NextPage = () => {
         title: data.title,
         url: data.url,
         type: data.type,
+        important: data.important,
         content: data.content,
       },
     }));
@@ -76,6 +78,16 @@ const PostView: NextPage = () => {
                   placeholder='type'
                   fontFamily='mono'
                   {...register('type')}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel fontSize='xs'>重要度</FormLabel>
+                <Input
+                  type='text'
+                  variant='flushed'
+                  placeholder='important'
+                  fontFamily='mono'
+                  {...register('important')}
                 />
               </FormControl>
               <FormControl>
