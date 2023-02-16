@@ -4,58 +4,31 @@ import {
   Container,
   Flex,
   Spacer,
-  Stack,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
+  Grid,
+  GridItem,
 } from '@chakra-ui/react';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import { Data } from '../common/data.type';
 import ContentsCard from '../components/ContentsCard';
 import Layout from '../components/Layout';
 import { types } from '../const/types';
 import { getMemoListSnapshot } from '../firebase/apis/memo';
 import { dataState } from '../states/dataState';
-
-const info = [
-  {
-    types: 'Salesforce',
-    contents: 'Salesforce',
-  },
-  {
-    types: 'Salesforce',
-    contents: 'Salesforce',
-  },
-  {
-    types: 'Salesforce',
-    contents: 'Salesforce',
-  },
-  {
-    types: 'Next',
-    contents: 'Next',
-  },
-  {
-    types: 'Nuxt',
-    contents: 'Nuxt',
-  },
-  {
-    types: 'Git',
-    contents: 'Git',
-  },
-  {
-    types: 'Components',
-    contents: 'Components',
-  },
-];
+import { memoState } from '../states/memoState';
 
 const HomeView: NextPage = () => {
   const router = useRouter();
   const [data, setData] = useRecoilState(dataState);
+  const resetMemoState = useResetRecoilState(memoState);
+
   useEffect(() => {
     const dataList: Data[] = [];
     getMemoListSnapshot().then((e) => {
@@ -67,9 +40,11 @@ const HomeView: NextPage = () => {
           title: doc.data().title,
           content: doc.data().content,
           createdAt: doc.data().createdAt,
+          important: doc.data().important,
         })
       );
       setData(dataList);
+      resetMemoState();
     });
   }, []);
   return (
@@ -99,9 +74,16 @@ const HomeView: NextPage = () => {
                   {data
                     .filter((data) => data.type === type)
                     .map((info) => (
-                      <Stack spacing={4} direction='column'>
-                        <ContentsCard title={info.title} content='テスト' />
-                      </Stack>
+                      // <HStack>
+                      //   <VStack spacing={4} direction='column'>
+                      //     <ContentsCard title={info.title} content='テスト' />
+                      //   </VStack>
+                      // </HStack>
+                      <Grid templateColumns='repeat(2, 1fr)' gap={6}>
+                        <GridItem>
+                          <ContentsCard title={info.title} content='テスト' />
+                        </GridItem>
+                      </Grid>
                     ))}
                 </TabPanel>
               ))}
