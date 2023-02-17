@@ -5,6 +5,7 @@ import { AtomKeys } from '../common/recoilKeys';
 export const memoState = atom<Memo>({
   key: AtomKeys.MEMO_STATE,
   default: {
+    id: '',
     url: '',
     type: '',
     important: '',

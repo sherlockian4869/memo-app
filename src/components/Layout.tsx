@@ -22,7 +22,7 @@ const Layout = ({ children }: Props) => {
   const router = useRouter();
   return (
     <div className={styles.container}>
-      <header>
+      <header className={styles.header}>
         <Box px={4} bg={useColorModeValue('gray.100', 'gray.900')}>
           <Container maxW='container.2xl'>
             <Flex
@@ -44,29 +44,31 @@ const Layout = ({ children }: Props) => {
         </Box>
       </header>
       <main>{children}</main>
-      <Box
-        bg={useColorModeValue('gray.100', 'gray.900')}
-        color={useColorModeValue('gray.700', 'gray.200')}
-        className={styles.footer}
-        minW='100%'
-      >
-        <Container
-          as={Stack}
-          maxW={'6xl'}
-          py={4}
-          direction={{ base: 'column', md: 'row' }}
-          spacing={4}
-          justify={{ base: 'center', md: 'space-between' }}
-          align={{ base: 'center', md: 'center' }}
+      <div>
+        <Box
+          bg={useColorModeValue('gray.100', 'gray.900')}
+          color={useColorModeValue('gray.700', 'gray.200')}
+          minW='100%'
+          className={styles.footer}
         >
-          <Stack direction={'row'} spacing={6}>
-            <Link href={'/'}>Home</Link>
-            <Link href={'#'}>About</Link>
-            <Link href={'#'}>Contact</Link>
-          </Stack>
-          <Text>© yaeok.co.jp</Text>
-        </Container>
-      </Box>
+          <Container
+            as={Stack}
+            maxW={'6xl'}
+            py={4}
+            direction={{ base: 'column', md: 'row' }}
+            spacing={4}
+            justify={{ base: 'center', md: 'space-between' }}
+            align={{ base: 'center', md: 'center' }}
+          >
+            <Stack direction={'row'} spacing={6}>
+              <Link href={'/'}>Home</Link>
+              <Link href={'#'}>About</Link>
+              <Link href={'#'}>Contact</Link>
+            </Stack>
+            <Text>© yaeok.co.jp</Text>
+          </Container>
+        </Box>
+      </div>
     </div>
   );
 };

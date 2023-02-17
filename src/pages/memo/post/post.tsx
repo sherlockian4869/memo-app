@@ -52,9 +52,7 @@ const PostView: NextPage = () => {
               onClick={() => window.history.back()}
               colorScheme='green'
               variant='solid'
-            >
-              トップへ
-            </Button>
+            ></Button>
           </Flex>
         </div>
         <form onSubmit={onSubmit}>

@@ -1,4 +1,4 @@
-import { Card, CardBody, Heading, Image, Stack, Text } from '@chakra-ui/react';
+import { Card, CardBody, Flex, Heading, Image, Text } from '@chakra-ui/react';
 import router from 'next/router';
 
 interface Props {
@@ -11,7 +11,7 @@ const ContentsCard = ({ id, title, content }: Props) => {
   const transition_detail = (path: string) => {
     router.push({
       pathname: path,
-      query: id,
+      query: { id: id },
     });
   };
   return (
@@ -20,23 +20,29 @@ const ContentsCard = ({ id, title, content }: Props) => {
       overflow='hidden'
       variant='outline'
       marginY='5px'
-      marginX='30px'
+      marginX='20px'
       padding='15px'
+      h='25vh'
+      w='40vw'
       onClick={() => transition_detail('/memo/detail')}
     >
-      <Image
-        objectFit='cover'
-        maxW={{ base: '100%', sm: '150px' }}
-        src='/favicon.ico'
-      />
+      <Flex justify='center' align='center' h='20vh'>
+        <Image
+          objectFit='fill'
+          maxW={{ base: '100%', sm: '150px' }}
+          maxH={{ base: '100%', sm: '150px' }}
+          src='/favicon.ico'
+        />
+      </Flex>
 
-      <Stack>
-        <CardBody paddingX='5vw'>
-          <Heading size='md'>{title}</Heading>
-
-          <Text py='2'>{content}</Text>
-        </CardBody>
-      </Stack>
+      <CardBody paddingX='2vw'>
+        <Heading fontSize='lg' size='md' noOfLines={1} marginBottom='2vh'>
+          {title}
+        </Heading>
+        <Text fontSize='4xs' noOfLines={3}>
+          {content}
+        </Text>
+      </CardBody>
     </Card>
   );
 };

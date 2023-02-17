@@ -7,39 +7,53 @@ import {
   FormLabel,
   Text,
   Divider,
+  Spinner,
+  Spacer,
 } from '@chakra-ui/react';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import Layout from '~/src/components/Layout';
-import { dataState } from '~/src/states/dataState';
+import { getMemo } from '~/src/firebase/apis/memo';
 import { memoState } from '~/src/states/memoState';
 
 const DetailView: NextPage = () => {
   const router = useRouter();
   const id = router.query.id ? router.query.id.toString() : '';
-  const info = useRecoilValue(dataState);
   const [data, setData] = useRecoilState(memoState);
   useEffect(() => {
-    const result = info.filter((item) => {
-      item.id === id;
-    });
-    setData({
-      title: result[0].title,
-      url: result[0].url,
-      type: result[0].type,
-      important: result[0].important,
-      content: result[0].content,
+    getMemo(id).then((result) => {
+      setData({
+        id: result.id,
+        url: result.data().url,
+        type: result.data().type,
+        important: result.data().important,
+        title: result.data().title,
+        content: result.data().content,
+      });
     });
   }, []);
   return (
-    <>
-      <Layout>
+    <Layout>
+      {typeof data == null ? (
+        <Box
+          h='90vh'
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+        >
+          <Spinner size='xl' />
+        </Box>
+      ) : (
         <Box marginY='10px' marginX='100px'>
           <div>
             <Flex py='4' justifyContent='space-between' alignItems='center'>
               <Button onClick={() => window.history.back()}>戻る</Button>
+              <Spacer />
+              <Button onClick={() => router.push('/memo/update/update')}>
+                更新
+              </Button>
             </Flex>
           </div>
           <div>
@@ -61,19 +75,26 @@ const DetailView: NextPage = () => {
               </FormControl>
               <FormControl>
                 <FormLabel fontSize='xs'>url</FormLabel>
-                <Text fontFamily='mono'>{data.url}</Text>
+                <Text fontFamily='mono'>
+                  <a href={data.url} target='_blank' rel='noopener noreferrer'>
+                    {data.url}
+                  </a>
+                </Text>
                 <Divider />
               </FormControl>
               <FormControl>
                 <FormLabel fontSize='xs'>内容</FormLabel>
-                <Text fontFamily='mono'>{data.content}</Text>
+                {data.content.split('\n').map((word) => (
+                  <Text fontFamily='mono'>{word}</Text>
+                ))}
                 <Divider />
               </FormControl>
             </VStack>
           </div>
         </Box>
-      </Layout>
-    </>
+      )}
+      ;
+    </Layout>
   );
 };
 
