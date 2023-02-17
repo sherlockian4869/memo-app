@@ -61,7 +61,9 @@ const PostConfirmView: NextPage = () => {
             </FormControl>
             <FormControl>
               <FormLabel fontSize='xs'>内容</FormLabel>
-              <Text fontFamily='mono'>{input.content}</Text>
+              {input.content.split('\n').map((word) => (
+                <Text fontFamily='mono'>{word}</Text>
+              ))}
               <Divider />
             </FormControl>
           </VStack>

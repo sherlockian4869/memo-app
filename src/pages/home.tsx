@@ -49,7 +49,7 @@ const HomeView: NextPage = () => {
     });
   }, []);
   return (
-    <>
+    <Layout>
       {data.length == 0 ? (
         <Box
           h='90vh'
@@ -60,37 +60,32 @@ const HomeView: NextPage = () => {
           <Spinner size='xl' />
         </Box>
       ) : (
-        <Layout>
-          <Box margin='10px'>
-            <Container maxW='container.2xl'>
-              <Flex justifyContent='space-between' alignItems='center'>
-                <Spacer />
-                <Button
-                  margin='10px'
-                  onClick={() => router.push('/memo/post/post')}
-                >
-                  新規作成
-                </Button>
-              </Flex>
-            </Container>
-            <Tabs variant='enclosed'>
-              <TabList>
-                {types.map((result) => (
-                  <Tab>{result}</Tab>
-                ))}
-              </TabList>
-              <TabPanels>
-                {types.map((type) => (
-                  <TabPanel>
-                    {data
-                      .filter((data) => data.type === type)
-                      .map((info) => (
-                        // <HStack>
-                        //   <VStack spacing={4} direction='column'>
-                        //     <ContentsCard title={info.title} content='テスト' />
-                        //   </VStack>
-                        // </HStack>
-                        <Grid templateColumns='repeat(2, 1fr)' gap={6}>
+        <Box margin='10px'>
+          <Container maxW='container.2xl'>
+            <Flex justifyContent='space-between' alignItems='center'>
+              <Spacer />
+              <Button
+                margin='10px'
+                onClick={() => router.push('/memo/post/post')}
+              >
+                新規作成
+              </Button>
+            </Flex>
+          </Container>
+          <Tabs variant='enclosed'>
+            <TabList>
+              {types.map((result) => (
+                <Tab>{result}</Tab>
+              ))}
+            </TabList>
+            <TabPanels>
+              {types.map((type) => (
+                <TabPanel>
+                  {data
+                    .filter((data) => data.type === type)
+                    .map((info) => (
+                      <Flex justify='center'>
+                        <Grid templateColumns='repeat(2, 1fr)'>
                           <GridItem>
                             <ContentsCard
                               id={info.id}
@@ -98,17 +93,24 @@ const HomeView: NextPage = () => {
                               content={info.content}
                             />
                           </GridItem>
+                          {/* <GridItem>
+                            <ContentsCard
+                              id={info.id}
+                              title={info.title}
+                              content={info.content}
+                            />
+                          </GridItem> */}
                         </Grid>
-                      ))}
-                  </TabPanel>
-                ))}
-              </TabPanels>
-            </Tabs>
-          </Box>
-        </Layout>
+                      </Flex>
+                    ))}
+                </TabPanel>
+              ))}
+            </TabPanels>
+          </Tabs>
+        </Box>
       )}
       ;
-    </>
+    </Layout>
   );
 };
 

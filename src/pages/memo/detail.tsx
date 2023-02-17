@@ -8,33 +8,35 @@ import {
   Text,
   Divider,
   Spinner,
-  Center,
+  Spacer,
 } from '@chakra-ui/react';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { Data } from '~/src/common/data.type';
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
 import Layout from '~/src/components/Layout';
-import { dataState } from '~/src/states/dataState';
+import { getMemo } from '~/src/firebase/apis/memo';
 import { memoState } from '~/src/states/memoState';
 
 const DetailView: NextPage = () => {
   const router = useRouter();
   const id = router.query.id ? router.query.id.toString() : '';
-  const info = useRecoilValue(dataState);
   const [data, setData] = useRecoilState(memoState);
-  const [temp, setTemp] = useState<Data>();
   useEffect(() => {
-    // findに変更したら単一取得が可能
-    const result = info.find((item) => {
-      item.id === id;
+    getMemo(id).then((result) => {
+      setData({
+        id: result.id,
+        url: result.data().url,
+        type: result.data().type,
+        important: result.data().important,
+        title: result.data().title,
+        content: result.data().content,
+      });
     });
-    setTemp(result);
   }, []);
   return (
-    <>
-      {typeof temp == undefined ? (
+    <Layout>
+      {typeof data == null ? (
         <Box
           h='90vh'
           display='flex'
@@ -44,47 +46,55 @@ const DetailView: NextPage = () => {
           <Spinner size='xl' />
         </Box>
       ) : (
-        <Layout>
-          <Box marginY='10px' marginX='100px'>
-            <div>
-              <Flex py='4' justifyContent='space-between' alignItems='center'>
-                <Button onClick={() => window.history.back()}>戻る</Button>
-              </Flex>
-            </div>
-            <div>
-              <VStack gap={5}>
-                <FormControl>
-                  <FormLabel fontSize='xs'>タイトル</FormLabel>
-                  <Text fontFamily='mono'>{temp.id}</Text>
-                  <Divider />
-                </FormControl>
-                <FormControl>
-                  <FormLabel fontSize='xs'>種別</FormLabel>
-                  <Text fontFamily='mono'>{temp.type}</Text>
-                  <Divider />
-                </FormControl>
-                <FormControl>
-                  <FormLabel fontSize='xs'>重要度</FormLabel>
-                  <Text fontFamily='mono'>{temp.important}</Text>
-                  <Divider />
-                </FormControl>
-                <FormControl>
-                  <FormLabel fontSize='xs'>url</FormLabel>
-                  <Text fontFamily='mono'>{temp.url}</Text>
-                  <Divider />
-                </FormControl>
-                <FormControl>
-                  <FormLabel fontSize='xs'>内容</FormLabel>
-                  <Text fontFamily='mono'>{temp.content}</Text>
-                  <Divider />
-                </FormControl>
-              </VStack>
-            </div>
-          </Box>
-        </Layout>
+        <Box marginY='10px' marginX='100px'>
+          <div>
+            <Flex py='4' justifyContent='space-between' alignItems='center'>
+              <Button onClick={() => window.history.back()}>戻る</Button>
+              <Spacer />
+              <Button onClick={() => router.push('/memo/update/update')}>
+                更新
+              </Button>
+            </Flex>
+          </div>
+          <div>
+            <VStack gap={5}>
+              <FormControl>
+                <FormLabel fontSize='xs'>タイトル</FormLabel>
+                <Text fontFamily='mono'>{data.title}</Text>
+                <Divider />
+              </FormControl>
+              <FormControl>
+                <FormLabel fontSize='xs'>種別</FormLabel>
+                <Text fontFamily='mono'>{data.type}</Text>
+                <Divider />
+              </FormControl>
+              <FormControl>
+                <FormLabel fontSize='xs'>重要度</FormLabel>
+                <Text fontFamily='mono'>{data.important}</Text>
+                <Divider />
+              </FormControl>
+              <FormControl>
+                <FormLabel fontSize='xs'>url</FormLabel>
+                <Text fontFamily='mono'>
+                  <a href={data.url} target='_blank' rel='noopener noreferrer'>
+                    {data.url}
+                  </a>
+                </Text>
+                <Divider />
+              </FormControl>
+              <FormControl>
+                <FormLabel fontSize='xs'>内容</FormLabel>
+                {data.content.split('\n').map((word) => (
+                  <Text fontFamily='mono'>{word}</Text>
+                ))}
+                <Divider />
+              </FormControl>
+            </VStack>
+          </div>
+        </Box>
       )}
       ;
-    </>
+    </Layout>
   );
 };
 

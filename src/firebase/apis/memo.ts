@@ -1,12 +1,12 @@
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   serverTimestamp,
   setDoc,
+  updateDoc,
 } from 'firebase/firestore';
-import { useRecoilValue } from 'recoil';
-import { userState } from '~/src/states/userState';
 import { auth, db } from '../firebase';
 
 /** ユーザマスタPath */
@@ -45,8 +45,37 @@ export const registMemo = async (
 };
 
 /**
- * 全てのメモを取得
- * @returns メモデータ
+ * メモ更新
+ * @param id documentId
+ * @param url url
+ * @param type 種別
+ * @param title タイトル
+ * @param content コンテンツ
+ * @param important 重要度
+ */
+export const updateMemo = async (
+  id: string,
+  url: string,
+  type: string,
+  title: string,
+  content: string,
+  important: string
+) => {
+  const user = auth.currentUser;
+  const docRef = doc(db, userMaster, user.uid, 'memos', id);
+
+  await updateDoc(docRef, {
+    url: url,
+    type: type,
+    title: title,
+    content: content,
+    important: important,
+  });
+};
+
+/**
+ * 全件メモ取得
+ * @returns 複数メモ
  */
 export const getMemoListSnapshot = async () => {
   const user = auth.currentUser;
@@ -54,4 +83,17 @@ export const getMemoListSnapshot = async () => {
 
   const snapshot = await getDocs(colRef);
   return snapshot;
+};
+
+/**
+ * 単一メモ取得
+ * @param id documentId
+ * @returns 単位メモ
+ */
+export const getMemo = async (id: string) => {
+  const user = auth.currentUser;
+  const docRef = doc(db, userMaster, user.uid, 'memos', id);
+
+  const document = await getDoc(docRef);
+  return document;
 };
