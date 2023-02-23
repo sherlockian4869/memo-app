@@ -17,15 +17,17 @@ const userMaster = 'version/1/users';
  * @param url url
  * @param type 種別
  * @param title タイトル
- * @param content コンテンツ
+ * @param content コンテンツ（一言）
  * @param important 重要度
+ * @param document ドキュメント（詳細）
  */
 export const registMemo = async (
   url: string,
   type: string,
   title: string,
   content: string,
-  important: string
+  important: string,
+  document: string
 ) => {
   const user = auth.currentUser;
   const registDate = serverTimestamp();
@@ -41,6 +43,7 @@ export const registMemo = async (
     important: important,
     content: content,
     createdAt: registDate,
+    document: document,
   });
 };
 
@@ -50,8 +53,9 @@ export const registMemo = async (
  * @param url url
  * @param type 種別
  * @param title タイトル
- * @param content コンテンツ
+ * @param content コンテンツ（一言）
  * @param important 重要度
+ * @param document ドキュメント（詳細）
  */
 export const updateMemo = async (
   id: string,
@@ -59,7 +63,8 @@ export const updateMemo = async (
   type: string,
   title: string,
   content: string,
-  important: string
+  important: string,
+  document: string
 ) => {
   const user = auth.currentUser;
   const docRef = doc(db, userMaster, user.uid, 'memos', id);
@@ -70,6 +75,7 @@ export const updateMemo = async (
     title: title,
     content: content,
     important: important,
+    document: document,
   });
 };
 

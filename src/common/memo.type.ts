@@ -5,4 +5,5 @@ export type Memo = {
   important: string;
   title: string;
   content: string;
+  document: string;
 };

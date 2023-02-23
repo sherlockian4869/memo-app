@@ -17,6 +17,7 @@ const ContentsCard = ({ id, title, content }: Props) => {
   return (
     <Card
       direction={{ base: 'column', sm: 'row' }}
+      minW='xl'
       overflow='hidden'
       variant='outline'
       marginY='5px'

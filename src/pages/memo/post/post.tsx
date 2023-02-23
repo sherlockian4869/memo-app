@@ -7,17 +7,46 @@ import {
   Flex,
   Spacer,
   VStack,
-  Textarea,
 } from '@chakra-ui/react';
 import type { NextPage } from 'next';
 import Router from 'next/router';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 import Layout from '~/src/components/Layout';
 import { Memo } from '../../../common/memo.type';
 import { memoState } from '../../../states/memoState';
+import {
+  Editor,
+  EditorState,
+  convertToRaw,
+  convertFromRaw,
+  RichUtils,
+} from 'draft-js';
+import 'draft-js/dist/Draft.css';
 
 const PostView: NextPage = () => {
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  );
+  useEffect(() => {
+    const raw = input.content;
+    if (raw) {
+      const contentState = convertFromRaw(JSON.parse(raw));
+      const newEditorState = EditorState.createWithContent(contentState);
+      setEditorState(newEditorState);
+    }
+  }, []);
+  const handleKeyCommand = (command, editorState) => {
+    const newState = RichUtils.handleKeyCommand(editorState, command);
+
+    if (newState) {
+      setEditorState(newState);
+      return 'handled';
+    }
+
+    return 'not-handled';
+  };
   const [input, setInput] = useRecoilState(memoState);
 
   const { register, handleSubmit } = useForm<Memo>({
@@ -27,10 +56,14 @@ const PostView: NextPage = () => {
       type: input.type,
       important: input.important,
       content: input.content,
+      document: editorState,
     },
   });
 
   const onSubmit = handleSubmit((data: Memo) => {
+    const contentState = editorState.getCurrentContent();
+    const raw = convertToRaw(contentState);
+    const document = JSON.stringify(raw);
     setInput((currentInput) => ({
       ...currentInput,
       ...{
@@ -39,6 +72,7 @@ const PostView: NextPage = () => {
         type: data.type,
         important: data.important,
         content: data.content,
+        document: document,
       },
     }));
     Router.push('/memo/post/post_confirm');
@@ -101,15 +135,26 @@ const PostView: NextPage = () => {
                 />
               </FormControl>
               <FormControl>
-                <FormLabel fontSize='xs'>内容</FormLabel>
-                <Textarea
+                <FormLabel fontSize='xs'>簡易メモ</FormLabel>
+                <Input
+                  type='text'
+                  variant='flushed'
                   placeholder='content'
-                  height='xs'
-                  size='md'
-                  resize='none'
                   fontFamily='mono'
                   {...register('content')}
                 />
+              </FormControl>
+              <FormControl>
+                <FormLabel fontSize='xs'>詳細</FormLabel>
+                <div>
+                  <Editor
+                    editorState={editorState}
+                    onChange={setEditorState}
+                    placeholder='ここから入力を行ってください。'
+                    fontFamily='mono'
+                    handleKeyCommand={handleKeyCommand}
+                  />
+                </div>
               </FormControl>
             </VStack>
           </div>

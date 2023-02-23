@@ -11,5 +11,6 @@ export const memoState = atom<Memo>({
     important: '',
     title: '',
     content: '',
+    document: null,
   },
 });

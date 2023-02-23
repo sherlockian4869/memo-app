@@ -7,5 +7,6 @@ export type Data = {
   important: string;
   title: string;
   content: string;
+  document: string;
   createdAt: Timestamp;
 };
