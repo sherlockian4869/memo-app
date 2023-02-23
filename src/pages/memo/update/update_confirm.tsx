@@ -23,12 +23,25 @@ import { useRecoilValue, useResetRecoilState } from 'recoil';
 import Layout from '~/src/components/Layout';
 import { updateMemo } from '~/src/firebase/apis/memo';
 import { memoState } from '../../../states/memoState';
+import { Editor, EditorState, convertFromRaw } from 'draft-js';
+import { useEffect, useState } from 'react';
 
 const PostConfirmView: NextPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const update = useRecoilValue(memoState);
   const resetMemoState = useResetRecoilState(memoState);
   const router = useRouter();
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  );
+  useEffect(() => {
+    const raw = update.document;
+    if (raw) {
+      const contentState = convertFromRaw(JSON.parse(raw));
+      const newEditorState = EditorState.createWithContent(contentState);
+      setEditorState(newEditorState);
+    }
+  }, []);
   return (
     <Layout>
       <Box marginY='10px' marginX='100px'>
@@ -60,10 +73,13 @@ const PostConfirmView: NextPage = () => {
               <Divider />
             </FormControl>
             <FormControl>
-              <FormLabel fontSize='xs'>内容</FormLabel>
-              {update.content.split('\n').map((word) => (
-                <Text fontFamily='mono'>{word}</Text>
-              ))}
+              <FormLabel fontSize='xs'>簡易メモ</FormLabel>
+              <Text fontFamily='mono'>{update.content}</Text>
+              <Divider />
+            </FormControl>
+            <FormControl>
+              <FormLabel fontSize='xs'>詳細</FormLabel>
+              <Editor editorState={editorState} readOnly={true} />
               <Divider />
             </FormControl>
           </VStack>
@@ -79,7 +95,8 @@ const PostConfirmView: NextPage = () => {
                   update.type,
                   update.title,
                   update.content,
-                  update.important
+                  update.important,
+                  update.document
                 );
                 onOpen();
               }}

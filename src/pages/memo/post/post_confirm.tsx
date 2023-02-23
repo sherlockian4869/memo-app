@@ -17,18 +17,31 @@ import {
   ModalCloseButton,
   useDisclosure,
 } from '@chakra-ui/react';
+import { useState, useEffect } from 'react';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
 import Layout from '~/src/components/Layout';
 import { registMemo } from '~/src/firebase/apis/memo';
 import { memoState } from '../../../states/memoState';
+import { Editor, EditorState, convertFromRaw } from 'draft-js';
 
 const PostConfirmView: NextPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const input = useRecoilValue(memoState);
   const resetMemoState = useResetRecoilState(memoState);
   const router = useRouter();
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  );
+  useEffect(() => {
+    const raw = input.document;
+    if (raw) {
+      const contentState = convertFromRaw(JSON.parse(raw));
+      const newEditorState = EditorState.createWithContent(contentState);
+      setEditorState(newEditorState);
+    }
+  }, []);
   return (
     <Layout>
       <Box marginY='10px' marginX='100px'>
@@ -60,10 +73,13 @@ const PostConfirmView: NextPage = () => {
               <Divider />
             </FormControl>
             <FormControl>
-              <FormLabel fontSize='xs'>内容</FormLabel>
-              {input.content.split('\n').map((word) => (
-                <Text fontFamily='mono'>{word}</Text>
-              ))}
+              <FormLabel fontSize='xs'>簡易メモ</FormLabel>
+              <Text fontFamily='mono'>{input.content}</Text>
+              <Divider />
+            </FormControl>
+            <FormControl>
+              <FormLabel fontSize='xs'>詳細</FormLabel>
+              <Editor editorState={editorState} readOnly={true} />
               <Divider />
             </FormControl>
           </VStack>
@@ -78,7 +94,8 @@ const PostConfirmView: NextPage = () => {
                   input.type,
                   input.title,
                   input.content,
-                  input.important
+                  input.important,
+                  input.document
                 );
                 onOpen();
               }}
@@ -101,6 +118,7 @@ const PostConfirmView: NextPage = () => {
               onClick={() => {
                 router.push('/');
                 resetMemoState();
+                EditorState.createEmpty();
                 onClose();
               }}
             ></ModalCloseButton>

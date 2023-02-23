@@ -9,8 +9,6 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  Grid,
-  GridItem,
   Spinner,
 } from '@chakra-ui/react';
 import type { NextPage } from 'next';
@@ -42,6 +40,7 @@ const HomeView: NextPage = () => {
           content: doc.data().content,
           createdAt: doc.data().createdAt,
           important: doc.data().important,
+          document: doc.data().document,
         })
       );
       setData(dataList);
@@ -81,35 +80,23 @@ const HomeView: NextPage = () => {
             <TabPanels>
               {types.map((type) => (
                 <TabPanel>
-                  {data
-                    .filter((data) => data.type === type)
-                    .map((info) => (
-                      <Flex justify='center'>
-                        <Grid templateColumns='repeat(2, 1fr)'>
-                          <GridItem>
-                            <ContentsCard
-                              id={info.id}
-                              title={info.title}
-                              content={info.content}
-                            />
-                          </GridItem>
-                          {/* <GridItem>
-                            <ContentsCard
-                              id={info.id}
-                              title={info.title}
-                              content={info.content}
-                            />
-                          </GridItem> */}
-                        </Grid>
-                      </Flex>
-                    ))}
+                  <Flex wrap='wrap' justify='center' gap='2'>
+                    {data
+                      .filter((data) => data.type === type)
+                      .map((info) => (
+                        <ContentsCard
+                          id={info.id}
+                          title={info.title}
+                          content={info.content}
+                        />
+                      ))}
+                  </Flex>
                 </TabPanel>
               ))}
             </TabPanels>
           </Tabs>
         </Box>
       )}
-      ;
     </Layout>
   );
 };

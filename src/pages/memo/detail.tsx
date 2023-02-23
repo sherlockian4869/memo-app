@@ -12,16 +12,20 @@ import {
 } from '@chakra-ui/react';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import Layout from '~/src/components/Layout';
 import { getMemo } from '~/src/firebase/apis/memo';
 import { memoState } from '~/src/states/memoState';
+import { Editor, EditorState, convertFromRaw } from 'draft-js';
+import { useEffect, useState } from 'react';
 
 const DetailView: NextPage = () => {
   const router = useRouter();
   const id = router.query.id ? router.query.id.toString() : '';
   const [data, setData] = useRecoilState(memoState);
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  );
   useEffect(() => {
     getMemo(id).then((result) => {
       setData({
@@ -31,7 +35,14 @@ const DetailView: NextPage = () => {
         important: result.data().important,
         title: result.data().title,
         content: result.data().content,
+        document: result.data().document,
       });
+      const raw = result.data().document;
+      if (raw) {
+        const contentState = convertFromRaw(JSON.parse(raw));
+        const newEditorState = EditorState.createWithContent(contentState);
+        setEditorState(newEditorState);
+      }
     });
   }, []);
   return (
@@ -83,10 +94,13 @@ const DetailView: NextPage = () => {
                 <Divider />
               </FormControl>
               <FormControl>
-                <FormLabel fontSize='xs'>内容</FormLabel>
-                {data.content.split('\n').map((word) => (
-                  <Text fontFamily='mono'>{word}</Text>
-                ))}
+                <FormLabel fontSize='xs'>簡易メモ</FormLabel>
+                <Text fontFamily='mono'>{data.content}</Text>
+                <Divider />
+              </FormControl>
+              <FormControl>
+                <FormLabel fontSize='xs'>詳細</FormLabel>
+                <Editor editorState={editorState} readOnly={true} />
                 <Divider />
               </FormControl>
             </VStack>
