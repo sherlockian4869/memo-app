@@ -7,6 +7,7 @@ import {
   Flex,
   Spacer,
   VStack,
+  Select,
 } from '@chakra-ui/react';
 import type { NextPage } from 'next';
 import Router from 'next/router';
@@ -24,6 +25,8 @@ import {
   RichUtils,
 } from 'draft-js';
 import 'draft-js/dist/Draft.css';
+import { important } from '~/src/const/important';
+import { types } from '~/src/const/types';
 
 const PostView: NextPage = () => {
   const [editorState, setEditorState] = useState(() =>
@@ -106,23 +109,27 @@ const PostView: NextPage = () => {
               </FormControl>
               <FormControl>
                 <FormLabel fontSize='xs'>種別</FormLabel>
-                <Input
-                  type='text'
+                <Select
                   variant='flushed'
-                  placeholder='type'
-                  fontFamily='mono'
+                  placeholder='値を選択して下さい'
                   {...register('type')}
-                />
+                >
+                  {types.map((item) => (
+                    <option value={item}>{item}</option>
+                  ))}
+                </Select>
               </FormControl>
               <FormControl>
                 <FormLabel fontSize='xs'>重要度</FormLabel>
-                <Input
-                  type='text'
+                <Select
                   variant='flushed'
-                  placeholder='important'
-                  fontFamily='mono'
+                  placeholder='値を選択して下さい'
                   {...register('important')}
-                />
+                >
+                  {important.map((item) => (
+                    <option value={item}>{item}</option>
+                  ))}
+                </Select>
               </FormControl>
               <FormControl>
                 <FormLabel fontSize='xs'>url</FormLabel>
